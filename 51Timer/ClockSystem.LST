@@ -1,4 +1,4 @@
-C51 COMPILER V9.00   CLOCKSYSTEM                                                           07/17/2017 12:19:15 PAGE 1   
+C51 COMPILER V9.00   CLOCKSYSTEM                                                           07/17/2017 14:31:47 PAGE 1   
 
 
 C51 COMPILER V9.00, COMPILATION OF MODULE CLOCKSYSTEM
@@ -36,8 +36,8 @@ line level    source
   27          {
   28   1          AUXR |= 0x80;               //定时器时钟1T模式
   29   1              TMOD &= 0xF0;           //设置定时器模式
-  30   1              TL0 = 0xA0;             //设置定时初值
-  31   1              TH0 = 0x15;             //设置定时初值
+  30   1              TL0 = 0x00;             //设置定时初值
+  31   1              TH0 = 0x28;             //设置定时初值
   32   1              TF0 = 0;                //清除TF0标志
   33   1              TR0 = 1;                //定时器0开始计时
   34   1          ET0=1;                      //使能定时器0中断
@@ -62,7 +62,7 @@ line level    source
   53   1          ClockBase.StopWatch.CurrentTime.S=0;
   54   1          ClockBase.StopWatch.CurrentTime.M=0;
   55   1          ClockBase.StopWatch.CurrentTime.H=0;
-C51 COMPILER V9.00   CLOCKSYSTEM                                                           07/17/2017 12:19:15 PAGE 2   
+C51 COMPILER V9.00   CLOCKSYSTEM                                                           07/17/2017 14:31:47 PAGE 2   
 
   56   1      
   57   1          /****设置定时器****/
@@ -126,7 +126,7 @@ line level    source
  115          
  116          void Timer_interface()
  117          {
-C51 COMPILER V9.00   CLOCKSYSTEM                                                           07/17/2017 12:19:15 PAGE 3   
+C51 COMPILER V9.00   CLOCKSYSTEM                                                           07/17/2017 14:31:47 PAGE 3   
 
  118   1          switch(ClockBase.Timer.CurrentInterface)
  119   1          {
@@ -190,7 +190,7 @@ line level    source
  177   2                  else if(Get_Key()==SecondCut_Button)
  178   2                  {
  179   3      
-C51 COMPILER V9.00   CLOCKSYSTEM                                                           07/17/2017 12:19:15 PAGE 4   
+C51 COMPILER V9.00   CLOCKSYSTEM                                                           07/17/2017 14:31:47 PAGE 4   
 
  180   3                  }
  181   2                  else if(Get_Key()==MinAdd_Button)
@@ -254,7 +254,7 @@ line level    source
  239   2              case Timer:
  240   2                  P00=0;
  241   2                  P01=1;
-C51 COMPILER V9.00   CLOCKSYSTEM                                                           07/17/2017 12:19:15 PAGE 5   
+C51 COMPILER V9.00   CLOCKSYSTEM                                                           07/17/2017 14:31:47 PAGE 5   
 
  242   2                  P02=1;
  243   2                  Timer_interface();
@@ -318,7 +318,7 @@ line level    source
  297   3              }
  298   2              else
  299   2                  P07=1;
-C51 COMPILER V9.00   CLOCKSYSTEM                                                           07/17/2017 12:19:15 PAGE 6   
+C51 COMPILER V9.00   CLOCKSYSTEM                                                           07/17/2017 14:31:47 PAGE 6   
 
  300   2          }
  301   1      
@@ -330,21 +330,23 @@ line level    source
  306   2                  break;
  307   2              
  308   2              case StopWatch:
- 309   2                  //DisplayNums(ClockBase.StopWatch.CurrentTime.S*10000+ClockBase.StopWatch.CurrentTime.M*100000
+ 309   2                  DisplayStopWatch(ClockBase.StopWatch.CurrentTime.M,ClockBase.StopWatch.CurrentTime.S,ClockBase
+             -.StopWatch.CurrentTime.MS);
+ 310   2                  //DisplayNums(ClockBase.StopWatch.CurrentTime.S*10000+ClockBase.StopWatch.CurrentTime.M*100000
              -0+ClockBase.StopWatch.CurrentTime.MS);
- 310   2                  break;
- 311   2              
- 312   2              case Clock:
- 313   2                  DisplayTime(ClockBase.Clock.CurrentTime.H,ClockBase.Clock.CurrentTime.M,ClockBase.Clock.Curren
+ 311   2                  break;
+ 312   2              
+ 313   2              case Clock:
+ 314   2                  DisplayTime(ClockBase.Clock.CurrentTime.H,ClockBase.Clock.CurrentTime.M,ClockBase.Clock.Curren
              -tTime.S);
- 314   2                  break;
- 315   2              
- 316   2          }
- 317   1      }
+ 315   2                  break;
+ 316   2              
+ 317   2          }
+ 318   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   1123    ----
+   CODE SIZE        =   1138    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----

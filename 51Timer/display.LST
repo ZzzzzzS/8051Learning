@@ -1,4 +1,4 @@
-C51 COMPILER V9.00   DISPLAY                                                               07/17/2017 12:19:15 PAGE 1   
+C51 COMPILER V9.00   DISPLAY                                                               07/17/2017 14:31:47 PAGE 1   
 
 
 C51 COMPILER V9.00, COMPILATION OF MODULE DISPLAY
@@ -24,8 +24,8 @@ line level    source
   15          
   16          
   17          unsigned char code tableduan[]={
-  18          // 0    1    2    3    4    5    6    7    8    9    A    B    C    D    E    F
-  19                  0x3F,0x06,0x5B,0x4F,0x66,0x6D,0x7D,0x07,0x7F,0x6F,0x77,0x7C,0x39,0x5E,0x79,0x71   // 段码
+  18          // 0    1    2    3    4    5    6    7    8    9    A    B    C    D    E    F 
+  19                  0x3F,0x06,0x5B,0x4F,0x66,0x6D,0x7D,0x07,0x7F,0x6F,0x77,0x7C,0x39,0x5E,0x79,0x00   // 段码
   20          };
   21          unsigned char code tablewei[]={
   22                  //1    2    3    4    5    6   7    8  
@@ -62,7 +62,7 @@ line level    source
   53          说明：    需要配合595程序使用
   54          
   55          */
-C51 COMPILER V9.00   DISPLAY                                                               07/17/2017 12:19:15 PAGE 2   
+C51 COMPILER V9.00   DISPLAY                                                               07/17/2017 14:31:47 PAGE 2   
 
   56          void DisplayNum(unsigned char num,unsigned char place)
   57          {       
@@ -81,64 +81,77 @@ line level    source
   70   1              DisplayNum(MM%10,4);
   71   1              DisplayNum(SS/10,6);
   72   1              DisplayNum(SS%10,7);
-  73   1      }
-  74          /************************ m^n函数 *****************************/
-  75          /*
-  76          函数名：  unsigned  long int  mypow
-  77          作用：    求m的n次方
-  78          参数：    m   n  
-  79          返回：    m的n次方
-  80          说明：    
-  81          */
-  82          unsigned  long int  mypow(unsigned char m,unsigned char n)
-  83          {
-  84   1              unsigned long int result=1;      
-  85   1              while(n--)result*=m;    
-  86   1              return result;
-  87   1      }
-  88          /***************************延时函数****************************/
-  89          
-  90          void Delay1ms()         //@11.0592MHz
-  91          {
-  92   1              unsigned char i, j;
-  93   1              i = 11;
-  94   1              j = 190;
-  95   1              do
-  96   1              {
-  97   2                      while (--j);
-  98   2              } while (--i);
-  99   1      }
- 100          /************************* 显示函数 ***************************/
- 101          /*
- 102          函数名：  void DisplayNums()
- 103          作用：    数码管多位显示
- 104          参数：    nums   ——显示的数字  
- 105          返回：    void
- 106          说明：    需要配合595程序和延时函数和mypow函数使用
- 107          */
- 108                  
- 109          void DisplayNums(unsigned  long int nums)
- 110          {
- 111   1              unsigned char t=0;
- 112   1              unsigned char temp;
- 113   1              for(t=0;t<8;t++)
- 114   1              {               
- 115   2                      Send_595(tablewei[t]);                  //输出位码 
- 116   2                      temp=(nums/mypow(10,8-t-1))%10;     //求出次位要显示的数
- 117   2                      Send_595(tableduan[temp]);              //输出段码
-C51 COMPILER V9.00   DISPLAY                                                               07/17/2017 12:19:15 PAGE 3   
+  73   1              DisplayNum(15,7);
+  74   1      }
+  75          
+  76          void DisplayStopWatch(char MM,char SS,char MS)
+  77          {
+  78   1              DisplayNum(MM/10,0);
+  79   1              DisplayNum(MM%10,1);
+  80   1              DisplayNum(SS/10,3);
+  81   1              DisplayNum(SS%10,4);
+  82   1              DisplayNum(MS/100,6);
+  83   1              MS/=10;
+  84   1              DisplayNum(MS%10,7);
+  85   1              DisplayNum(15,7);
+  86   1      }
+  87          /************************ m^n函数 *****************************/
+  88          /*
+  89          函数名：  unsigned  long int  mypow
+  90          作用：    求m的n次方
+  91          参数：    m   n  
+  92          返回：    m的n次方
+  93          说明：    
+  94          */
+  95          unsigned  long int  mypow(unsigned char m,unsigned char n)
+  96          {
+  97   1              unsigned long int result=1;      
+  98   1              while(n--)result*=m;    
+  99   1              return result;
+ 100   1      }
+ 101          /***************************延时函数****************************/
+ 102          
+ 103          void Delay1ms()         //@11.0592MHz
+ 104          {
+ 105   1              unsigned char i, j;
+ 106   1              i = 11;
+ 107   1              j = 190;
+ 108   1              do
+ 109   1              {
+ 110   2                      while (--j);
+ 111   2              } while (--i);
+ 112   1      }
+ 113          /************************* 显示函数 ***************************/
+ 114          /*
+ 115          函数名：  void DisplayNums()
+ 116          作用：    数码管多位显示
+ 117          参数：    nums   ——显示的数字  
+C51 COMPILER V9.00   DISPLAY                                                               07/17/2017 14:31:47 PAGE 3   
 
- 118   2      
- 119   2                      P_HC595_RCLK = 1;
- 120   2                      P_HC595_RCLK = 0;                                                       //锁存输出数据
- 121   2      
- 122   2                      Delay1ms();     
- 123   2              }
- 124   1      }
+ 118          返回：    void
+ 119          说明：    需要配合595程序和延时函数和mypow函数使用
+ 120          */
+ 121                  
+ 122          void DisplayNums(unsigned  long int nums)
+ 123          {
+ 124   1              unsigned char t=0;
+ 125   1              unsigned char temp;
+ 126   1              for(t=0;t<8;t++)
+ 127   1              {               
+ 128   2                      Send_595(tablewei[t]);                  //输出位码 
+ 129   2                      temp=(nums/mypow(10,8-t-1))%10;     //求出次位要显示的数
+ 130   2                      Send_595(tableduan[temp]);              //输出段码
+ 131   2      
+ 132   2                      P_HC595_RCLK = 1;
+ 133   2                      P_HC595_RCLK = 0;                                                       //锁存输出数据
+ 134   2      
+ 135   2                      Delay1ms();     
+ 136   2              }
+ 137   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    290    ----
+   CODE SIZE        =    337    ----
    CONSTANT SIZE    =     24    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----

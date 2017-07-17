@@ -174,10 +174,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>7</ColumnNumber>
+      <ColumnNumber>45</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1</TopLine>
-      <CurrentLine>1</CurrentLine>
+      <TopLine>75</TopLine>
+      <CurrentLine>76</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\display.c</PathWithFileName>
       <FilenameWithoutPath>display.c</FilenameWithoutPath>
@@ -188,10 +188,10 @@
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>19</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>1</TopLine>
-      <CurrentLine>1</CurrentLine>
+      <CurrentLine>15</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\display.h</PathWithFileName>
       <FilenameWithoutPath>display.h</FilenameWithoutPath>
@@ -258,10 +258,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>40</ColumnNumber>
+      <ColumnNumber>97</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>286</TopLine>
-      <CurrentLine>293</CurrentLine>
+      <TopLine>25</TopLine>
+      <CurrentLine>41</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\ClockSystem.c</PathWithFileName>
       <FilenameWithoutPath>ClockSystem.c</FilenameWithoutPath>
@@ -272,10 +272,10 @@
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>23</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>1</TopLine>
+      <CurrentLine>5</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\ClockSystem.h</PathWithFileName>
       <FilenameWithoutPath>ClockSystem.h</FilenameWithoutPath>
@@ -300,10 +300,10 @@
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>25</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>27</TopLine>
+      <CurrentLine>46</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\data.h</PathWithFileName>
       <FilenameWithoutPath>data.h</FilenameWithoutPath>
@@ -1673,9 +1673,9 @@
         </Doc>
         <Doc>
           <Name>.\display.c</Name>
-          <ColumnNumber>7</ColumnNumber>
-          <TopLine>1</TopLine>
-          <CurrentLine>1</CurrentLine>
+          <ColumnNumber>45</ColumnNumber>
+          <TopLine>75</TopLine>
+          <CurrentLine>76</CurrentLine>
         </Doc>
         <Doc>
           <Name>STC15F2K60S2.H</Name>
@@ -1691,9 +1691,9 @@
         </Doc>
         <Doc>
           <Name>DISPLAY.H</Name>
-          <ColumnNumber>0</ColumnNumber>
+          <ColumnNumber>19</ColumnNumber>
           <TopLine>1</TopLine>
-          <CurrentLine>1</CurrentLine>
+          <CurrentLine>15</CurrentLine>
         </Doc>
         <Doc>
           <Name>CLOCKSYSTEM.H</Name>
@@ -1703,9 +1703,9 @@
         </Doc>
         <Doc>
           <Name>.\ClockSystem.c</Name>
-          <ColumnNumber>40</ColumnNumber>
-          <TopLine>286</TopLine>
-          <CurrentLine>293</CurrentLine>
+          <ColumnNumber>97</ColumnNumber>
+          <TopLine>25</TopLine>
+          <CurrentLine>41</CurrentLine>
         </Doc>
         <Doc>
           <Name>.\data.c</Name>

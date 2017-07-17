@@ -27,8 +27,8 @@ void Timer_init()
 {
     AUXR |= 0x80;		//定时器时钟1T模式
 	TMOD &= 0xF0;		//设置定时器模式
-	TL0 = 0xA0;		//设置定时初值
-	TH0 = 0x15;		//设置定时初值
+	TL0 = 0x00;		//设置定时初值
+	TH0 = 0x28;		//设置定时初值
 	TF0 = 0;		//清除TF0标志
 	TR0 = 1;		//定时器0开始计时
     ET0=1;			//使能定时器0中断
@@ -306,6 +306,7 @@ void T0_isr() interrupt 1
             break;
         
         case StopWatch:
+            DisplayStopWatch(ClockBase.StopWatch.CurrentTime.M,ClockBase.StopWatch.CurrentTime.S,ClockBase.StopWatch.CurrentTime.MS);
             //DisplayNums(ClockBase.StopWatch.CurrentTime.S*10000+ClockBase.StopWatch.CurrentTime.M*1000000+ClockBase.StopWatch.CurrentTime.MS);
             break;
         

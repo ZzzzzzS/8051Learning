@@ -11,4 +11,5 @@ sbit	P_HC595_SRCLK = P4^2;	//pin 11	SRCLK	Shift data clock
 extern void DisplayNums(unsigned  long int nums);
 extern void DisplayTime(char HH,char MM,char SS);
 extern void DisplayNum(unsigned char num,unsigned char place);
+extern void DisplayStopWatch(char MM,char SS,char MS);
 #endif //__DISPLAY_H__

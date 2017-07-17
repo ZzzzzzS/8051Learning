@@ -15,8 +15,8 @@
 
 
 unsigned char code tableduan[]={
-// 0    1    2    3    4    5    6    7    8    9    A    B    C    D    E    F
-	0x3F,0x06,0x5B,0x4F,0x66,0x6D,0x7D,0x07,0x7F,0x6F,0x77,0x7C,0x39,0x5E,0x79,0x71   // ¶ÎÂë
+// 0    1    2    3    4    5    6    7    8    9    A    B    C    D    E    F 
+	0x3F,0x06,0x5B,0x4F,0x66,0x6D,0x7D,0x07,0x7F,0x6F,0x77,0x7C,0x39,0x5E,0x79,0x00   // ¶ÎÂë
 };
 unsigned char code tablewei[]={
 	//1    2    3    4    5    6   7    8  
@@ -70,6 +70,19 @@ void DisplayTime(char HH,char MM,char SS)
 	DisplayNum(MM%10,4);
 	DisplayNum(SS/10,6);
 	DisplayNum(SS%10,7);
+	DisplayNum(15,7);
+}
+
+void DisplayStopWatch(char MM,char SS,char MS)
+{
+	DisplayNum(MM/10,0);
+	DisplayNum(MM%10,1);
+	DisplayNum(SS/10,3);
+	DisplayNum(SS%10,4);
+	DisplayNum(MS/100,6);
+	MS/=10;
+	DisplayNum(MS%10,7);
+	DisplayNum(15,7);
 }
 /************************ m^nº¯Êý *****************************/
 /*
