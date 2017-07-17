@@ -1,0 +1,59 @@
+C51 COMPILER V9.00   MAIN                                                                  07/17/2017 12:19:15 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: D:\ProgramFiles\KEIL4\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include "STC15F2K60S2.H"
+   2          #include "key.h"
+   3          #include "display.h"
+   4          #include "ClockSystem.h"
+   5          
+   6          
+   7          void Delay50ms()                //@12.000MHz
+   8          {
+   9   1              unsigned char i, j, k;
+  10   1      
+  11   1              i = 3;
+  12   1              j = 72;
+  13   1              k = 161;
+  14   1              do
+  15   1              {
+  16   2                      do
+  17   2                      {
+  18   3                              while (--k);
+  19   3                      } while (--j);
+  20   2              } while (--i);
+  21   1      }
+  22          
+  23          
+  24          void main()
+  25          {
+  26   1          system_init();
+  27   1          while(1)
+  28   1          {
+  29   2              Delay50ms();            //@12.000MHz
+  30   2                      Delay50ms();            //@12.000MHz
+  31   2                      Delay50ms();            //@12.000MHz
+  32   2                      //Delay50ms();          //@12.000MHz
+  33   2              system_update();
+  34   2              //DisplayNums(Get_Key());
+  35   2          }
+  36   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     30    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

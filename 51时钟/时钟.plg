@@ -1,0 +1,15 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Project:</h2>
+H:\单片机学习\学习的程序\时钟\时钟.uvproj
+Project File Date:  10/23/2016
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: data=37.0 xdata=0 code=1742
+creating hex file from "时钟"...
+"时钟" - 0 Error(s), 0 Warning(s).

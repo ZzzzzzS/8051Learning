@@ -1,0 +1,8 @@
+"STARTUP.obj",
+"display.obj",
+"main.obj",
+"key.obj",
+"ClockSystem.obj",
+"data.obj" 
+TO "51Timer" 
+RAMSIZE(256) 

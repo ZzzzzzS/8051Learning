@@ -1,0 +1,357 @@
+C51 COMPILER V9.00   CLOCKSYSTEM                                                           07/17/2017 12:19:15 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE CLOCKSYSTEM
+OBJECT MODULE PLACED IN ClockSystem.OBJ
+COMPILER INVOKED BY: D:\ProgramFiles\KEIL4\C51\BIN\C51.EXE ClockSystem.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          /**********************718创新实验室开发板例程*********************
+   2          *  编写：718创新实验室  ——ZZS
+   3          *  平台：stc15K60s2
+   4          *  说明：由于作者的水平有限，若有不足之处，还请大家谅解。
+   5          *                建议大家多看看数据手册。
+   6          *                有问题，请联系我QQ523939208     by 718 ZZS       
+   7          ******************************************************************/
+   8          
+   9          #include "ClockSystem.h"
+  10          #include "STC15F2K60S2.H"
+  11          #include "data.h"
+  12          #include "key.h"
+  13          #include "display.h"
+  14          
+  15          /****声明函数****/
+  16          void Timer_init();
+  17          void data_init();
+  18          void Clock_interface();
+  19          void Timer_interface();
+  20          void StopWatch_Interface();
+  21          void Timeset(time *Base,char AddMS);
+  22          void T0_isr();     //interrupt 1 
+  23          
+  24          
+  25          /****函数定义****/
+  26          void Timer_init()
+  27          {
+  28   1          AUXR |= 0x80;               //定时器时钟1T模式
+  29   1              TMOD &= 0xF0;           //设置定时器模式
+  30   1              TL0 = 0xA0;             //设置定时初值
+  31   1              TH0 = 0x15;             //设置定时初值
+  32   1              TF0 = 0;                //清除TF0标志
+  33   1              TR0 = 1;                //定时器0开始计时
+  34   1          ET0=1;                      //使能定时器0中断
+  35   1              EA=1;               //开启总中断
+  36   1      }
+  37          
+  38          void data_init()
+  39          {
+  40   1      
+  41   1          ClockBase.CurrentMode=Clock;        //设置默认界面为时钟界面
+  42   1      
+  43   1          /****设置时钟****/
+  44   1          ClockBase.Clock.CurrentInterface=Start;  //设置当前模式和初始化时间
+  45   1          ClockBase.Clock.CurrentTime.MS=0;
+  46   1          ClockBase.Clock.CurrentTime.S=0;
+  47   1          ClockBase.Clock.CurrentTime.M=0;
+  48   1          ClockBase.Clock.CurrentTime.H=0;
+  49   1      
+  50   1          /****设置秒表****/
+  51   1          ClockBase.StopWatch.CurrentInterface=Setting;   //设置当前模式和初始化时间
+  52   1          ClockBase.StopWatch.CurrentTime.MS=0;
+  53   1          ClockBase.StopWatch.CurrentTime.S=0;
+  54   1          ClockBase.StopWatch.CurrentTime.M=0;
+  55   1          ClockBase.StopWatch.CurrentTime.H=0;
+C51 COMPILER V9.00   CLOCKSYSTEM                                                           07/17/2017 12:19:15 PAGE 2   
+
+  56   1      
+  57   1          /****设置定时器****/
+  58   1          ClockBase.Timer.CurrentInterface=Setting;   //设置当前模式和初始化时间
+  59   1          ClockBase.Timer.CurrentTime.MS=0;
+  60   1          ClockBase.Timer.CurrentTime.S=0;
+  61   1          ClockBase.Timer.CurrentTime.M=0;
+  62   1          ClockBase.Timer.CurrentTime.H=0;
+  63   1      }
+  64          
+  65          void system_init()
+  66          {
+  67   1          Timer_init();               //设置定时器初始化
+  68   1          data_init();                //界面初始化
+  69   1      }
+  70          
+  71          
+  72          void Timeset(time *Base,char AddMS)
+  73          {
+  74   1          if(AddMS==0||AddMS>=100||AddMS<=-100)
+  75   1              return;
+  76   1      
+  77   1          if(AddMS>0)
+  78   1          {
+  79   2              Base->MS+=AddMS;
+  80   2              Base->S+=(Base->MS/1000);
+  81   2              Base->M+=(Base->S/60);
+  82   2              Base->H+=(Base->M/60);
+  83   2      
+  84   2              Base->MS=(Base->MS%1000);
+  85   2              Base->S=(Base->S%60);
+  86   2              Base->M=(Base->M%60);
+  87   2              Base->H=(Base->H%24);
+  88   2          }
+  89   1          else
+  90   1          {
+  91   2              AddMS=-AddMS;
+  92   2      
+  93   2              Base->MS-=AddMS;
+  94   2              if(Base->MS<0)
+  95   2              {
+  96   3                  Base->MS=999;
+  97   3                  Base->S--;
+  98   3              }
+  99   2              if(Base->S<0)
+ 100   2              {
+ 101   3                  Base->M--;
+ 102   3                  Base->S=59;
+ 103   3              }
+ 104   2              if(Base->M<0)
+ 105   2              {
+ 106   3                  Base->H--;
+ 107   3                  Base->M=59;
+ 108   3              }
+ 109   2              if(Base->H<0)
+ 110   2              {
+ 111   3                  Base->H=23;
+ 112   3              }
+ 113   2          }
+ 114   1      }
+ 115          
+ 116          void Timer_interface()
+ 117          {
+C51 COMPILER V9.00   CLOCKSYSTEM                                                           07/17/2017 12:19:15 PAGE 3   
+
+ 118   1          switch(ClockBase.Timer.CurrentInterface)
+ 119   1          {
+ 120   2              case Setting:
+ 121   2                  if(Get_Key()==SecondAdd_Button)
+ 122   2                  {
+ 123   3                      ClockBase.Timer.CurrentTime.S+=1;
+ 124   3                      if(ClockBase.Timer.CurrentTime.S>60)
+ 125   3                      {
+ 126   4                          ClockBase.Timer.CurrentTime.M++;
+ 127   4                          ClockBase.Timer.CurrentTime.S=0;
+ 128   4                      }
+ 129   3                  }
+ 130   2                  else if(Get_Key()==SecondCut_Button)
+ 131   2                  {
+ 132   3                      ClockBase.Timer.CurrentTime.S-=1;
+ 133   3                      if(ClockBase.Timer.CurrentTime.S<0)
+ 134   3                      {
+ 135   4                          ClockBase.Timer.CurrentTime.M--;
+ 136   4                          ClockBase.Timer.CurrentTime.S=59;
+ 137   4                      }
+ 138   3                  }
+ 139   2                  else if(Get_Key()==MinAdd_Button)
+ 140   2                  {
+ 141   3                      ClockBase.Timer.CurrentTime.M++;
+ 142   3                  }
+ 143   2                  else if(Get_Key()==MinCut_Button)
+ 144   2                  {
+ 145   3                      ClockBase.Timer.CurrentTime.M--;
+ 146   3                      if(ClockBase.Timer.CurrentTime.M<=0)
+ 147   3                          ClockBase.Timer.CurrentTime.M=0;
+ 148   3                  }
+ 149   2      
+ 150   2                  if(Get_Key()==InterfaceShifting_Button)
+ 151   2                  {
+ 152   3                      ClockBase.Timer.CurrentInterface=Start;
+ 153   3                  }
+ 154   2                  break;
+ 155   2              
+ 156   2              case Start:
+ 157   2                  if(Get_Key()==InterfaceShifting_Button)
+ 158   2                  {
+ 159   3                      ClockBase.Timer.CurrentInterface=Setting;
+ 160   3                  }
+ 161   2                  break;
+ 162   2              default:
+ 163   2                  ClockBase.Timer.CurrentInterface=Start;
+ 164   2              
+ 165   2          }
+ 166   1      }
+ 167          
+ 168          void Clock_interface()
+ 169          {
+ 170   1          switch(ClockBase.Clock.CurrentInterface)
+ 171   1          {
+ 172   2              case Start:
+ 173   2                  if(Get_Key()==SecondAdd_Button)
+ 174   2                  {
+ 175   3      
+ 176   3                  }
+ 177   2                  else if(Get_Key()==SecondCut_Button)
+ 178   2                  {
+ 179   3      
+C51 COMPILER V9.00   CLOCKSYSTEM                                                           07/17/2017 12:19:15 PAGE 4   
+
+ 180   3                  }
+ 181   2                  else if(Get_Key()==MinAdd_Button)
+ 182   2                  {
+ 183   3                      ClockBase.Clock.CurrentTime.M++;
+ 184   3                  }
+ 185   2                  else if(Get_Key()==MinCut_Button)
+ 186   2                  {
+ 187   3                      ClockBase.Clock.CurrentTime.M--;
+ 188   3                      if(ClockBase.Clock.CurrentTime.M<=0)
+ 189   3                          ClockBase.Clock.CurrentTime.M=59;
+ 190   3                  }
+ 191   2                  else if(Get_Key()==HoursAdd_Button)
+ 192   2                  {
+ 193   3                      ClockBase.Clock.CurrentTime.H++;
+ 194   3                  }
+ 195   2                  else if(Get_Key()==HoursCut_Button)
+ 196   2                  {
+ 197   3                      ClockBase.Clock.CurrentTime.H--;
+ 198   3                      if(ClockBase.Clock.CurrentTime.H<=0)
+ 199   3                          ClockBase.Clock.CurrentTime.H=23;
+ 200   3                  }
+ 201   2                  break;
+ 202   2              
+ 203   2              default:
+ 204   2                  ClockBase.Clock.CurrentInterface=Start;
+ 205   2          }
+ 206   1      }
+ 207          
+ 208          void StopWatch_Interface()
+ 209          {
+ 210   1          switch(ClockBase.StopWatch.CurrentInterface)
+ 211   1          {
+ 212   2              case Start:
+ 213   2                  if(Get_Key()==InterfaceShifting_Button)
+ 214   2                  {
+ 215   3                      ClockBase.StopWatch.CurrentInterface=Setting;
+ 216   3                  }
+ 217   2                  break;
+ 218   2              
+ 219   2              case Setting:
+ 220   2                  if(Get_Key()==InterfaceShifting_Button)
+ 221   2                  {
+ 222   3                      ClockBase.StopWatch.CurrentInterface=Start;
+ 223   3                      ClockBase.StopWatch.CurrentTime.MS=0;
+ 224   3                      ClockBase.StopWatch.CurrentTime.S=0;
+ 225   3                      ClockBase.StopWatch.CurrentTime.M=0;
+ 226   3                      ClockBase.StopWatch.CurrentTime.H=0;
+ 227   3                  }
+ 228   2                  break;
+ 229   2              
+ 230   2              default:
+ 231   2                  ClockBase.StopWatch.CurrentInterface=Setting;
+ 232   2          }
+ 233   1      }
+ 234          
+ 235          void system_update()
+ 236          {
+ 237   1          switch(ClockBase.CurrentMode)       //选择显示不同的界面
+ 238   1          {
+ 239   2              case Timer:
+ 240   2                  P00=0;
+ 241   2                  P01=1;
+C51 COMPILER V9.00   CLOCKSYSTEM                                                           07/17/2017 12:19:15 PAGE 5   
+
+ 242   2                  P02=1;
+ 243   2                  Timer_interface();
+ 244   2                  //DisplayNums(ClockBase.Timer.CurrentTime.H*1000000+ClockBase.Timer.CurrentTime.M*1000+ClockBa
+             -se.Timer.CurrentTime.S);
+ 245   2                  break;
+ 246   2              
+ 247   2              case StopWatch:
+ 248   2                  P00=1;
+ 249   2                  P01=0;
+ 250   2                  P02=1;
+ 251   2                  StopWatch_Interface();
+ 252   2                  //DisplayNums(ClockBase.StopWatch.CurrentTime.S*10000+ClockBase.StopWatch.CurrentTime.M*100000
+             -0+ClockBase.StopWatch.CurrentTime.MS);
+ 253   2                  break;
+ 254   2              
+ 255   2              case Clock:
+ 256   2                  P00=1;
+ 257   2                  P01=1;
+ 258   2                  P02=0;
+ 259   2                  Clock_interface();
+ 260   2                  //DisplayNums(ClockBase.Clock.CurrentTime.H*1000000+ClockBase.Clock.CurrentTime.M*1000+ClockBa
+             -se.Clock.CurrentTime.S);
+ 261   2                  break;
+ 262   2              
+ 263   2              default:
+ 264   2                  ClockBase.CurrentMode=Clock;    //如果都不是就调整成clock界面
+ 265   2          }
+ 266   1      
+ 267   1          if(Get_Key()==ModeShifting_Button)
+ 268   1          {
+ 269   2              ClockBase.CurrentMode++;
+ 270   2              if(ClockBase.CurrentMode==MAX_Mode)
+ 271   2                  ClockBase.CurrentMode=Timer;
+ 272   2          }
+ 273   1      }
+ 274          
+ 275          void T0_isr() interrupt 1 
+ 276          {
+ 277   1          if(ClockBase.StopWatch.CurrentInterface==Start)
+ 278   1          {
+ 279   2              Timeset(&(ClockBase.StopWatch.CurrentTime),5);
+ 280   2          }
+ 281   1          if(ClockBase.Clock.CurrentInterface==Start)
+ 282   1          {
+ 283   2              Timeset(&(ClockBase.Clock.CurrentTime),5);
+ 284   2          }
+ 285   1          if(ClockBase.Timer.CurrentInterface==Start)
+ 286   1          {
+ 287   2              Timeset(&(ClockBase.Timer.CurrentTime),-5);
+ 288   2              if(ClockBase.Timer.CurrentTime.H==23&&ClockBase.Timer.CurrentTime.M==59&&ClockBase.Timer.CurrentTi
+             -me.S==59)
+ 289   2              {
+ 290   3                  ClockBase.Timer.CurrentInterface=Setting;
+ 291   3                  ClockBase.CurrentMode=Timer;
+ 292   3                  P07=0;
+ 293   3                  ClockBase.Timer.CurrentTime.H=0;
+ 294   3                  ClockBase.Timer.CurrentTime.M=0;
+ 295   3                  ClockBase.Timer.CurrentTime.S=0;
+ 296   3                  ClockBase.Timer.CurrentTime.MS=0;
+ 297   3              }
+ 298   2              else
+ 299   2                  P07=1;
+C51 COMPILER V9.00   CLOCKSYSTEM                                                           07/17/2017 12:19:15 PAGE 6   
+
+ 300   2          }
+ 301   1      
+ 302   1          switch(ClockBase.CurrentMode)       //选择显示不同的界面
+ 303   1          {
+ 304   2              case Timer:
+ 305   2                  DisplayTime(ClockBase.Timer.CurrentTime.H,ClockBase.Timer.CurrentTime.M,ClockBase.Timer.Curren
+             -tTime.S);
+ 306   2                  break;
+ 307   2              
+ 308   2              case StopWatch:
+ 309   2                  //DisplayNums(ClockBase.StopWatch.CurrentTime.S*10000+ClockBase.StopWatch.CurrentTime.M*100000
+             -0+ClockBase.StopWatch.CurrentTime.MS);
+ 310   2                  break;
+ 311   2              
+ 312   2              case Clock:
+ 313   2                  DisplayTime(ClockBase.Clock.CurrentTime.H,ClockBase.Clock.CurrentTime.M,ClockBase.Clock.Curren
+             -tTime.S);
+ 314   2                  break;
+ 315   2              
+ 316   2          }
+ 317   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1123    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       4
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

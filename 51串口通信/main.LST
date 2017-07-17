@@ -1,0 +1,86 @@
+C51 COMPILER V9.00   MAIN                                                                  10/30/2016 15:32:23 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include<reg52.h>
+   2          int j=0;
+   3          char code sz[]={"hello "};
+   4          char  sz2[3];
+   5          void inie()
+   6          {
+   7   1              EA=1;
+   8   1              ES=1;
+   9   1              TMOD=0x20;
+  10   1              TH1=0xfd;
+  11   1              TL1=0xfd;
+  12   1              TR1=1;
+  13   1              SM0=0;
+  14   1              SM1=1;
+  15   1              REN=1;
+  16   1              }
+  17          void main()
+  18          {
+  19   1              int i=0;
+  20   1              inie();
+  21   1              while(1)
+  22   1              {       
+  23   2               if(j>2)
+  24   2               {
+  25   3                      ES=0;
+  26   3                      for(i=0;i<=5;++i)
+  27   3                      {
+  28   4                              SBUF=sz[i];
+  29   4                              while(TI==0);
+  30   4                              TI=0;
+  31   4                      }
+  32   3                      for(i=0;i<=2;++i)
+  33   3                      {
+  34   4                              SBUF=sz2[i];
+  35   4                              while(TI==0);
+  36   4                              TI=0;
+  37   4                      }
+  38   3      
+  39   3                      ES=1;
+  40   3                      j=0;;
+  41   3               }
+  42   2              }
+  43   1      }
+  44          void ShuRu() interrupt 4
+  45          {
+  46   1                      RI=0;
+  47   1                      sz2[j]=SBUF;
+  48   1                      j++;
+  49   1              }
+  50                  
+  51          
+  52          
+  53          
+  54          
+  55          
+C51 COMPILER V9.00   MAIN                                                                  10/30/2016 15:32:23 PAGE 2   
+
+  56          
+  57          
+  58          
+  59          
+  60          
+  61                  
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    144    ----
+   CONSTANT SIZE    =      7    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      5    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
