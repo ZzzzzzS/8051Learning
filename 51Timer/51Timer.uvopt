@@ -174,10 +174,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>45</ColumnNumber>
+      <ColumnNumber>25</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>75</TopLine>
-      <CurrentLine>76</CurrentLine>
+      <TopLine>104</TopLine>
+      <CurrentLine>104</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\display.c</PathWithFileName>
       <FilenameWithoutPath>display.c</FilenameWithoutPath>
@@ -232,7 +232,7 @@
       <Focus>0</Focus>
       <ColumnNumber>49</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>7</TopLine>
+      <TopLine>1</TopLine>
       <CurrentLine>12</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\key.c</PathWithFileName>
@@ -258,10 +258,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>97</ColumnNumber>
+      <ColumnNumber>52</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>25</TopLine>
-      <CurrentLine>41</CurrentLine>
+      <TopLine>353</TopLine>
+      <CurrentLine>369</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\ClockSystem.c</PathWithFileName>
       <FilenameWithoutPath>ClockSystem.c</FilenameWithoutPath>
@@ -1668,14 +1668,14 @@
         <Doc>
           <Name>.\key.c</Name>
           <ColumnNumber>49</ColumnNumber>
-          <TopLine>7</TopLine>
+          <TopLine>1</TopLine>
           <CurrentLine>12</CurrentLine>
         </Doc>
         <Doc>
           <Name>.\display.c</Name>
-          <ColumnNumber>45</ColumnNumber>
-          <TopLine>75</TopLine>
-          <CurrentLine>76</CurrentLine>
+          <ColumnNumber>25</ColumnNumber>
+          <TopLine>104</TopLine>
+          <CurrentLine>104</CurrentLine>
         </Doc>
         <Doc>
           <Name>STC15F2K60S2.H</Name>
@@ -1703,9 +1703,9 @@
         </Doc>
         <Doc>
           <Name>.\ClockSystem.c</Name>
-          <ColumnNumber>97</ColumnNumber>
-          <TopLine>25</TopLine>
-          <CurrentLine>41</CurrentLine>
+          <ColumnNumber>52</ColumnNumber>
+          <TopLine>353</TopLine>
+          <CurrentLine>369</CurrentLine>
         </Doc>
         <Doc>
           <Name>.\data.c</Name>

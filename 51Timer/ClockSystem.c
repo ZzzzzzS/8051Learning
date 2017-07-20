@@ -32,13 +32,17 @@ void Timer_init()
 	TF0 = 0;		//清除TF0标志
 	TR0 = 1;		//定时器0开始计时
     ET0=1;			//使能定时器0中断
-	EA=1;		    //开启总中断
+
+    IT0=1;		   //设定为下降沿触发     IT0=0;下降沿和上升沿均可触发
+	EX0=1;		   //开启外部中断0
+	EA=1;		   //开启总中断
 }
+
 
 void data_init()
 {
 
-    ClockBase.CurrentMode=Clock;        //设置默认界面为时钟界面
+    ClockBase.CurrentMode=StopWatch;        //设置默认界面为时钟界面
 
     /****设置时钟****/
     ClockBase.Clock.CurrentInterface=Start;  //设置当前模式和初始化时间
@@ -205,6 +209,21 @@ void Clock_interface()
     }
 }
 
+void Delay1000ms()		//@11.0592MHz
+{
+	unsigned char i, j, k;
+	i = 43;
+	j = 6;
+	k = 203;
+	do
+	{
+		do
+		{
+			while (--k);
+		} while (--j);
+	} while (--i);
+}
+
 void StopWatch_Interface()
 {
     switch(ClockBase.StopWatch.CurrentInterface)
@@ -214,6 +233,10 @@ void StopWatch_Interface()
             {
                 ClockBase.StopWatch.CurrentInterface=Setting;
             }
+            /*if(P34==0&&ClockBase.StopWatch.CurrentTime.S>3)
+            {
+                ClockBase.StopWatch.CurrentInterface=Setting;
+            }*/
             break;
         
         case Setting:
@@ -225,6 +248,16 @@ void StopWatch_Interface()
                 ClockBase.StopWatch.CurrentTime.M=0;
                 ClockBase.StopWatch.CurrentTime.H=0;
             }
+            /*if(P34==0)
+            {
+                ClockBase.StopWatch.CurrentInterface=Start;
+				ClockBase.StopWatch.CurrentTime.MS=0;
+                ClockBase.StopWatch.CurrentTime.S=0;
+                ClockBase.StopWatch.CurrentTime.M=0;
+                ClockBase.StopWatch.CurrentTime.H=0;
+                while(P34==0);
+				Delay1000ms();
+            }*/
             break;
         
         default:
@@ -241,7 +274,7 @@ void system_update()
             P01=1;
             P02=1;
             Timer_interface();
-            //DisplayNums(ClockBase.Timer.CurrentTime.H*1000000+ClockBase.Timer.CurrentTime.M*1000+ClockBase.Timer.CurrentTime.S);
+            //DisplayTime(ClockBase.Timer.CurrentTime.H,ClockBase.Timer.CurrentTime.M,ClockBase.Timer.CurrentTime.S);
             break;
         
         case StopWatch:
@@ -249,7 +282,7 @@ void system_update()
             P01=0;
             P02=1;
             StopWatch_Interface();
-            //DisplayNums(ClockBase.StopWatch.CurrentTime.S*10000+ClockBase.StopWatch.CurrentTime.M*1000000+ClockBase.StopWatch.CurrentTime.MS);
+            //DisplayStopWatch(ClockBase.StopWatch.CurrentTime.M,ClockBase.StopWatch.CurrentTime.S,ClockBase.StopWatch.CurrentTime.MS);
             break;
         
         case Clock:
@@ -257,7 +290,7 @@ void system_update()
             P01=1;
             P02=0;
             Clock_interface();
-            //DisplayNums(ClockBase.Clock.CurrentTime.H*1000000+ClockBase.Clock.CurrentTime.M*1000+ClockBase.Clock.CurrentTime.S);
+            //DisplayTime(ClockBase.Clock.CurrentTime.H,ClockBase.Clock.CurrentTime.M,ClockBase.Clock.CurrentTime.S);
             break;
         
         default:
@@ -297,9 +330,9 @@ void T0_isr() interrupt 1
         }
         else
             P07=1;
-    }
+    } 
 
-    switch(ClockBase.CurrentMode)       //选择显示不同的界面
+	switch(ClockBase.CurrentMode)       //选择显示不同的界面
     {
         case Timer:
             DisplayTime(ClockBase.Timer.CurrentTime.H,ClockBase.Timer.CurrentTime.M,ClockBase.Timer.CurrentTime.S);
@@ -307,12 +340,34 @@ void T0_isr() interrupt 1
         
         case StopWatch:
             DisplayStopWatch(ClockBase.StopWatch.CurrentTime.M,ClockBase.StopWatch.CurrentTime.S,ClockBase.StopWatch.CurrentTime.MS);
-            //DisplayNums(ClockBase.StopWatch.CurrentTime.S*10000+ClockBase.StopWatch.CurrentTime.M*1000000+ClockBase.StopWatch.CurrentTime.MS);
             break;
-        
         case Clock:
             DisplayTime(ClockBase.Clock.CurrentTime.H,ClockBase.Clock.CurrentTime.M,ClockBase.Clock.CurrentTime.S);
             break;
+    }
+}
+
+
+void exint0_isr() interrupt 0
+{
+     switch(ClockBase.StopWatch.CurrentInterface)
+    {
+        case Start:
+            if(ClockBase.StopWatch.CurrentTime.S>3)
+            {
+                ClockBase.StopWatch.CurrentInterface=Setting;
+				Delay1000ms();
+            }
+            break;
         
+        case Setting:
+            {
+                ClockBase.StopWatch.CurrentInterface=Start;
+				ClockBase.StopWatch.CurrentTime.MS=0;
+                ClockBase.StopWatch.CurrentTime.S=0;
+                ClockBase.StopWatch.CurrentTime.M=0;
+                ClockBase.StopWatch.CurrentTime.H=0;
+            }
+            break;
     }
 }
